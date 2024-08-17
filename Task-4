@@ -1,0 +1,52 @@
+// Function to calculate monthly mortgage payments
+function calculateMortgage(principal, annualRate, years) {
+    const monthlyRate = (annualRate / 100) / 12; // Convert annual rate to monthly
+    const numberOfPayments = years * 12; // Total number of payments (months)
+    
+    // Mortgage payment formula
+    const monthlyPayment = (principal * monthlyRate) / 
+                           (1 - Math.pow(1 + monthlyRate, -numberOfPayments));
+    
+    return monthlyPayment.toFixed(2); // Round to two decimal places
+}
+
+// Function to get user input and calculate the mortgage
+function getMortgageDetails() {
+    const readline = require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    readline.question('Enter the principal amount (e.g., 200000): ', (principal) => {
+        if (isNaN(principal) || principal <= 0) {
+            console.log("Please enter a valid principal amount.");
+            readline.close();
+            return;
+        }
+
+        readline.question('Enter the annual interest rate (e.g., 5 for 5%): ', (annualRate) => {
+            if (isNaN(annualRate) || annualRate <= 0) {
+                console.log("Please enter a valid interest rate.");
+                readline.close();
+                return;
+            }
+
+            readline.question('Enter the loan term in years (e.g., 30): ', (years) => {
+                if (isNaN(years) || years <= 0) {
+                    console.log("Please enter a valid number of years.");
+                    readline.close();
+                    return;
+                }
+
+                // Call the function to calculate the mortgage
+                const payment = calculateMortgage(Number(principal), Number(annualRate), Number(years));
+                console.log(`Your monthly mortgage payment is $${payment}`);
+                
+                readline.close();
+            });
+        });
+    });
+}
+
+// Execute the function to start the process
+getMortgageDetails();
